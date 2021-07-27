@@ -220,7 +220,7 @@ function logout() {
 function generateImageCode() {
 
     // 1.设置图片url地址
-    image_url = '/passport/image_code'
+    image_url = '/passport/image_code/' + new Date().getTime()
 
     // 2.将地址设置到img标签的src属性中,为image_url
     $('.get_pic_code').attr('src', image_url)
