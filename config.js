@@ -2,6 +2,8 @@ const express = require('express')
 const path = require('path')
 const cookieParser = require('cookie-parser')
 const cookieSession = require('cookie-session')
+const { csrfProtect } = require('./utils/common')
+const keys = require('./keys')
 
 // 引入各种路由文件
 const indexRouter = require('./routes/index')
@@ -60,13 +62,13 @@ class AppConfig {
         this.app.use(cookieParser())
         this.app.use(cookieSession({
             name: 'my_session',
-            keys: ['LUT&AS$DST&F%SGIKYTGCVN&SGATGASO%F%TH&OPI%%HL'],
+            keys: [keys.session_key],
             maxAge: 1000 * 60 * 60 * 24 * 2     // 2天
         }))
 
         // 注册路由
-        this.app.use(indexRouter)
-        this.app.use(passportRouter)
+        this.app.use(csrfProtect, indexRouter)
+        this.app.use(csrfProtect, passportRouter)
     }
 }
 

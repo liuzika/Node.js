@@ -17,23 +17,22 @@
         <div class="header">
             <a href="#" class="logo fl"><img src="/news/images/logo.png" alt="logo"></a>
             <ul class="menu fl">
-                <li data-cid="1" class="active"><a href="javascript:;">最新</a></li>
-                <li data-cid="2"><a href="javascript:;">股市</a></li>
-                <li data-cid="3"><a href="javascript:;">债市</a></li>
-                <li data-cid="4"><a href="javascript:;">商品</a></li>
-                <li data-cid="5"><a href="javascript:;">外汇</a></li>
-                <li data-cid="6"><a href="javascript:;">公司</a></li>
-
+                {{each category v i}}
+                <li data-cid={{i+1}} class={{i?'':'active'}}><a href="javascript:;">{{v.name}}</a></li>
+                {{/each}}
             </ul>
+            {{if !user_info}}
             <div class="user_btns fr">
                 <a href="javascript:;" class="login_btn">登录</a> / <a href="javascript:;" class="register_btn">注册</a>
             </div>
             <!-- 用户登录后显示下面，隐藏上面 -->
+            {{else}}
             <div class="user_login fr">
                 <img src="/news/images/person01.png" class="lgin_pic">
-                <a href="#">张三</a>
+                <a href="#">{{user_info.nick_name}}</a>
                 <a href="#" onclick="logout()">退出</a>
             </div>
+            {{/if}}
         </div>
     </div>
 
@@ -96,12 +95,16 @@
             </div>
             <ul class="rank_list">
 
-                <li><span class="first">1</span><a href="#">势如破竹！人民币再度连闯四道关口 在岸、离岸双双升破6.42</a></li>
+                {{each newsClick v i}}
+                <li><span class={{i | classNameFilter}}>{{i+1}}</span><a href="#">{{v.title}}</a></li>
+                {{/each}}
+
+                <!-- <li><span class="first">1</span><a href="#">势如破竹！人民币再度连闯四道关口 在岸、离岸双双升破6.42</a></li>
                 <li><span class="second">2</span><a href="#">凛冬已至，还有多少银行人在假装干银行</a></li>
                 <li><span class="third">3</span><a href="#">人民日报：部分城市楼市放松限制引关注，楼市调控不会“拉抽屉”</a></li>
                 <li><span>4</span><a href="#">势如破竹！人民币再度连闯四道关口 在岸、离岸双双升破6.42</a></li>
                 <li><span>5</span><a href="#">凛冬已至，还有多少银行人在假装干银行</a></li>
-                <li><span>6</span><a href="#">人民日报：部分城市楼市放松限制引关注，楼市调控不会“拉抽屉”</a></li>
+                <li><span>6</span><a href="#">人民日报：部分城市楼市放松限制引关注，楼市调控不会“拉抽屉”</a></li> -->
             </ul>
         </div>
     </div>

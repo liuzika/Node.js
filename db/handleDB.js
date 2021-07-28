@@ -51,7 +51,7 @@ async function handleDB(res, tableName, methodName, errMsg, n1, n2) {
         })
     } catch (err) {
         console.log(err); // 在后端打印异常
-        res.send({ errMsg: errMsg })  // 通知前端出现异常
+        res.send({ errmsg: errMsg })  // 通知前端出现异常
         return
     }
 

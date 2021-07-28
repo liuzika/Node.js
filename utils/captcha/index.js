@@ -15,4 +15,7 @@ class Captcha {
     }
 }
 
+
+
+
 module.exports = Captcha
