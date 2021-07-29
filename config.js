@@ -2,12 +2,13 @@ const express = require('express')
 const path = require('path')
 const cookieParser = require('cookie-parser')
 const cookieSession = require('cookie-session')
-const { csrfProtect } = require('./utils/common')
+const { csrfProtect, abort404 } = require('./utils/common')
 const keys = require('./keys')
 
 // 引入各种路由文件
 const indexRouter = require('./routes/index')
 const passportRouter = require('./routes/passport')
+const detailRouter = require('./routes/detail')
 
 // 函数的封装
 // function appConfig(app) {
@@ -69,6 +70,13 @@ class AppConfig {
         // 注册路由
         this.app.use(csrfProtect, indexRouter)
         this.app.use(csrfProtect, passportRouter)
+        this.app.use(csrfProtect, detailRouter)
+
+        this.app.use((req, res) => {
+            (async function () {
+                abort404(req, res)
+            })()
+        })
     }
 }
 

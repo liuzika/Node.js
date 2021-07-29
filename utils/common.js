@@ -1,3 +1,5 @@
+const handleDB = require('../db/handleDB')
+
 /**
  * 
  * @param {object} date 时间对象 
@@ -37,5 +39,23 @@ function csrfProtect(req, res, next) {
     }
 }
 
+async function getUser(req, res) {
+    let user_id = req.session['user_id']
+    let result = []
+    if (user_id) {
+        result = await handleDB(res, 'info_user', 'find', '数据库查询出错', `id='${user_id}'`)
+    }
+    return result
+}
 
-module.exports = { dateTime, csrfProtect }
+async function abort404(req, res) {
+    let userInfo = await getUser(req, res)
+    res.render('news/404', {
+        user_info: userInfo[0] ? {
+            nick_name: userInfo[0].nick_name,
+            avatar_url: userInfo[0].avatar_url
+        } : false
+    })
+}
+
+module.exports = { dateTime, csrfProtect, getUser, abort404 }
