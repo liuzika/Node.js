@@ -5,7 +5,7 @@ function getCookie(name) {
 
 
 $(function () {
-
+    updateCommentCount()
     // 打开登录框
     $('.comment_form_logout').click(function () {
         $('.login_form_con').show();
@@ -91,7 +91,7 @@ $(function () {
             "news_id": news_id,
             "comment": news_comment
         };
-        /*
+
         $.ajax({
             url: "/news_detail/news_comment",
             type: "post",
@@ -109,7 +109,7 @@ $(function () {
                     comment_html += '<div class="person_pic fl">'
                     if (comment.user.avatar_url) {
                         comment_html += '<img src="' + comment.user.avatar_url + '" alt="用户图标">'
-                    }else {
+                    } else {
                         comment_html += '<img src="../../static/news/images/person01.png" alt="用户图标">'
                     }
                     comment_html += '</div>'
@@ -137,13 +137,11 @@ $(function () {
 
                     //更新评论数量
                     updateCommentCount();
-                }else {
+                } else {
                     alert(resp.errmsg)
                 }
             }
         })
-*/
-
     })
 
     // 给a,input标签添加了代理事件
@@ -162,11 +160,9 @@ $(function () {
 
         // 点赞处理
         if (sHandler.indexOf('comment_up') >= 0) {
-            /*
             var $this = $(this);
             var action = "add"
-            if(sHandler.indexOf('has_comment_up')>=0)
-            {
+            if (sHandler.indexOf('has_comment_up') >= 0) {
                 // 如果当前该评论已经是点赞状态，再次点击会进行到此代码块内，代表要取消点赞
                 action = "remove"
             }
@@ -193,7 +189,7 @@ $(function () {
                         var like_count = $this.attr('data-likecount')
 
                         //增加安全性校验,如果获取不到data-likecount的值,那么默认设置成0
-                        if(like_count == undefined){
+                        if (like_count == undefined) {
                             like_count = 0;
                         }
 
@@ -202,31 +198,28 @@ $(function () {
                             like_count = parseInt(like_count) + 1
                             // 代表是点赞
                             $this.addClass('has_comment_up')
-                        }else {
+                        } else {
                             like_count = parseInt(like_count) - 1
                             $this.removeClass('has_comment_up')
                         }
-
                         // 更新点赞数据,重新赋值回去
                         $this.attr('data-likecount', like_count)
                         if (like_count == 0) {
-                            $this.news("赞")
-                        }else {
-                            $this.news(like_count)
+                            $this.html("赞")
+                        } else {
+                            $this.html(like_count)
                         }
-                    }else if (resp.errno == "4101"){
+                    } else if (resp.errno == "4101") {
                         $('.login_form_con').show();
-                    }else {
+                    } else {
                         alert(resp.errmsg)
                     }
                 }
             })
-            */
         }
 
         // 评论回复
         if (sHandler.indexOf('reply_sub') >= 0) {
-            /*
             var $this = $(this)
             var news_id = $this.parent().attr('data-newsid')
             var parent_id = $this.parent().attr('data-commentid')
@@ -258,7 +251,7 @@ $(function () {
                         comment_html += '<div class="person_pic fl">'
                         if (comment.user.avatar_url) {
                             comment_html += '<img src="' + comment.user.avatar_url + '" alt="用户图标">'
-                        }else {
+                        } else {
                             comment_html += '<img src="../../static/news/images/person01.png" alt="用户图标">'
                         }
                         comment_html += '</div>'
@@ -291,12 +284,11 @@ $(function () {
 
                         //更新评论数量
                         updateCommentCount();
-                    }else {
+                    } else {
                         alert(resp.errmsg)
                     }
                 }
             })
-            */
         }
     })
 
