@@ -13,7 +13,6 @@ $(function () {
             "action": "unfollow",
             "user_id": user_id
         }
-        /*
         $.ajax({
             url: "/news/followed_user",
             type: "post",
@@ -31,16 +30,15 @@ $(function () {
                     $(".focus").show()
                     $(".focused").hide()
                     window.location.reload()
-                }else if (resp.errno == "4101"){
+                } else if (resp.errno == "4101") {
                     // 未登录，弹出登录框
                     $('.login_form_con').show();
-                }else {
+                } else {
                     // 取消关注失败
-                    alert(resp.errmsg)
+                    // alert(resp.errmsg)
+                    alert('功能开发中，敬请期待')
                 }
             }
         })
-        */
-
     })
 })

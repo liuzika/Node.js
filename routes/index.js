@@ -1,6 +1,7 @@
 const express = require('express')
 const handleDB = require('../db/handleDB')
 const { getUser } = require('../utils/common')
+const constant = require('../utils/constant')
 require('../utils/filter')
 
 const router = express.Router()
@@ -20,7 +21,7 @@ router.get('/', (req, res) => {
         let data = {
             user_info: userInfo[0] ? {
                 nick_name: userInfo[0].nick_name,
-                avatar_url: userInfo[0].avatar_url
+                avatar_url: userInfo[0].avatar_url ? constant.QINIU_AVATAR_URL_PRE + userInfo[0].avatar_url : '/news/images/worm.jpg'
             } : false,
             category: result2,
             newsClick: result3

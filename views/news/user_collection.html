@@ -15,12 +15,9 @@
     <div class="my_collect">
         <h3>我的收藏</h3>
         <ul class="article_list">
-            <li><a href="#">智能音箱“不智能”：这次轮到三星语音助手Bixby被吐槽了</a><span>2018-1-17</span></li>
-            <li><a href="#">智能音箱“不智能”：这次轮到三星语音助手Bixby被吐槽了</a><span>2018-1-17</span></li>
-            <li><a href="#">智能音箱“不智能”：这次轮到三星语音助手Bixby被吐槽了</a><span>2018-1-17</span></li>
-            <li><a href="#">智能音箱“不智能”：这次轮到三星语音助手Bixby被吐槽了</a><span>2018-1-17</span></li>
-            <li><a href="#">智能音箱“不智能”：这次轮到三星语音助手Bixby被吐槽了</a><span>2018-1-17</span></li>
-            <li><a href="#">智能音箱“不智能”：这次轮到三星语音助手Bixby被吐槽了</a><span>2018-1-17</span></li>
+            {{each collectionNewsList v}}
+            <li><a href="/news_detail/{{v.id}}">{{v.title}}</a><span>{{v.create_time | dateFormat}}</span></li>
+            {{/each}}
         </ul>
 
 
@@ -29,12 +26,12 @@
         <script>
             $(function () {
                 $("#pagination").pagination({
-                    currentPage: 2,
-                    totalPage: 3,
-                    callback: function (current) {
-                        alert('ok!');
-                    }
-                });
+                    currentPage: Number({{ currentPage }}),
+                    totalPage: Number({{ totalPage }}),
+                callback: function (current) {
+                    location.href = `http://localhost:3000/user/collection?currentPage=${current}&perPage=10`
+                }
+            });
             });
         </script>
 

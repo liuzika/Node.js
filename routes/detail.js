@@ -1,7 +1,7 @@
 const express = require('express')
 const handleDB = require('../db/handleDB')
 const { dateTime, getUser, abort404 } = require('../utils/common')
-require('../utils/filter')
+const constant = require('../utils/constant')
 
 const router = express.Router()
 
@@ -43,7 +43,7 @@ router.get('/news_detail/:news_id', (req, res) => {
             let commenterResult = await handleDB(res, 'info_user', 'find', '数据库查询出错', `id=${commentResult[i].user_id}`)
             commentResult[i].commenter = {
                 nick_name: commenterResult[0].nick_name,
-                avatar_url: commenterResult[0].avatar_url ? commenterResult[0].avatar_url : '/news/images/worm.jpg'
+                avatar_url: commenterResult[0].avatar_url ? constant.QINIU_AVATAR_URL_PRE + commenterResult[0].avatar_url : '/news/images/worm.jpg'
             }
             // 判断有无父评论
             if (commentResult[i].parent_id) {
@@ -67,17 +67,37 @@ router.get('/news_detail/:news_id', (req, res) => {
             })
         }
 
+        // 新闻作者信息
+        let authorInfo = await handleDB(res, 'info_user', 'find', '数据库查询出错', `id=${newsResult[0].user_id}`)
+        let authorNewsCount = await handleDB(res, 'info_news', 'sql', '数据库查询出错', `select count(*) from info_news where user_id=${authorInfo[0].id}`)
+        let authorFollowerCount = await handleDB(res, 'info_user_fans', 'sql', '数据库查询出错', `select count(*) from info_user_fans where followed_id=${authorInfo[0].id}`)
+        authorInfo[0].avatar_url = authorInfo[0].avatar_url ? constant.QINIU_AVATAR_URL_PRE + authorInfo[0].avatar_url : '/news/images/worm.jpg'
+
+        // 登录的用户是否关注了这个作者
+        let isFollow = false
+        if (userInfo[0]) {
+            let followResult = await handleDB(res, 'info_user_fans', 'find', '数据库查询出错', `follower_id=${userInfo[0].id} and followed_id=${authorInfo[0].id}`)
+            if (followResult[0]) {
+                isFollow = true
+            }
+        }
+
+
         // 传给前端的数据
         let data = {
             user_info: userInfo[0] ? {
                 nick_name: userInfo[0].nick_name,
-                avatar_url: userInfo[0].avatar_url ? userInfo[0].avatar_url : '/news/images/worm.jpg'
+                avatar_url: userInfo[0].avatar_url ? constant.QINIU_AVATAR_URL_PRE + userInfo[0].avatar_url : '/news/images/worm.jpg'
             } : false,
             newsClick: result3,
             newsData: newsResult[0],
             isCollection,
             commentList: commentResult,
-            user_like_comment_ids
+            user_like_comment_ids,
+            authorInfo: authorInfo[0],
+            authorNewsCount: authorNewsCount[0]['count(*)'],
+            authorFollowerCount: authorFollowerCount[0]['count(*)'],
+            isFollow
         }
 
         res.render('news/detail', data)
@@ -175,7 +195,7 @@ router.post('/news_detail/news_comment', (req, res) => {
             errno: '0',
             data: {
                 user: {
-                    avatar_url: userInfo[0].avatar_url ? userInfo[0].avatar_url : '/news/images/worm.jpg',
+                    avatar_url: userInfo[0].avatar_url ? constant.QINIU_AVATAR_URL_PRE + userInfo[0].avatar_url : '/news/images/worm.jpg',
                     nick_name: userInfo[0].nick_name
                 },
                 content: comment,
@@ -236,6 +256,44 @@ router.post('/news_detail/comment_like', (req, res) => {
             errmsg: '操作成功'
         })
 
+    })()
+})
+
+// 关注操作请求
+router.post('/news_detail/followed_user', (req, res) => {
+    (async function () {
+
+        // 用户登录状态
+        let userInfo = await getUser(req, res)
+        if (!userInfo[0]) {
+            res.send({ errno: '4101', errmsg: '未登录' })
+            return
+        }
+
+        // 前端传递的参数非空
+        let { user_id, action } = req.body
+        if (!user_id || !action) {
+            res.send({ errmsg: '参数错误01' })
+            return
+        }
+
+        // 对应id的数据是否存在
+        let newsResult = await handleDB(res, 'info_user', 'find', '数据库查询错误', `id=${user_id}`)
+        if (!newsResult[0]) {
+            res.send({ errmsg: '参数错误02' })
+            return
+        }
+
+        // 关注和取消关注
+        if (action === 'follow') {
+            await handleDB(res, 'info_user_fans', 'insert', '数据库添加出错', {
+                follower_id: userInfo[0].id,
+                followed_id: user_id
+            })
+        } else {
+            await handleDB(res, 'info_user_fans', 'delete', '数据库删除出错', `follower_id=${userInfo[0].id} and followed_id=${user_id}`)
+        }
+        res.send({ errno: '0', errmsg: '操作成功' })
     })()
 })
 

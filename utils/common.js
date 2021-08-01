@@ -48,6 +48,14 @@ async function getUser(req, res) {
     return result
 }
 
+async function getUserInfo(req, res) {
+    let userInfo = await getUser(req, res)
+    if (!userInfo[0]) {
+        res.redirect('/')
+    }
+    return userInfo
+}
+
 async function abort404(req, res) {
     let userInfo = await getUser(req, res)
     res.render('news/404', {
@@ -58,4 +66,4 @@ async function abort404(req, res) {
     })
 }
 
-module.exports = { dateTime, csrfProtect, getUser, abort404 }
+module.exports = { dateTime, csrfProtect, getUser, abort404, getUserInfo }

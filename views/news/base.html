@@ -24,8 +24,8 @@
             <!-- 用户登录后显示下面，隐藏上面 -->
             {{else}}
             <div class="user_login fr">
-                <img src="/news/images/person01.png" class="lgin_pic">
-                <a href="#">{{user_info.nick_name}}</a>
+                <img src="{{user_info.avatar_url}}" class="lgin_pic">
+                <a href="/profile" id="nick_name">{{user_info.nick_name}}</a>
                 <a href="#" onclick="logout()">退出</a>
             </div>
             {{/if}}

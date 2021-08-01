@@ -9,6 +9,7 @@ const keys = require('./keys')
 const indexRouter = require('./routes/index')
 const passportRouter = require('./routes/passport')
 const detailRouter = require('./routes/detail')
+const profileRouter = require('./routes/profile')
 
 // 函数的封装
 // function appConfig(app) {
@@ -71,6 +72,7 @@ class AppConfig {
         this.app.use(csrfProtect, indexRouter)
         this.app.use(csrfProtect, passportRouter)
         this.app.use(csrfProtect, detailRouter)
+        this.app.use(csrfProtect, profileRouter)
 
         this.app.use((req, res) => {
             (async function () {
